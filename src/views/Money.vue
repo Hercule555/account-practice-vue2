@@ -1,17 +1,17 @@
 <template>
-    <div>
-      nihao
-    </div>
+  <div>nihao
+    <Nav />
+  </div>
 </template>
 
 <script  lang="ts">
-  export default {
-    name: 'Money'
-  }
+import { component } from "vue/types/umd";
 
+export default {
+  name: "Money",
+};
 </script>
 
 <style lang="scss" scoped>
-
 </style>
 
