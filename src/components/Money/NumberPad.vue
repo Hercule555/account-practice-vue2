@@ -13,7 +13,7 @@
       <button @click="inputConent">7</button>
       <button @click="inputConent">8</button>
       <button @click="inputConent">9</button>
-      <button @click="ok" class="ok">OK</button>
+      <button class="ok">OK</button>
       <button @click="inputConent" class="zero">0</button>
       <button @click="inputConent">.</button>
     </div>
