@@ -52,9 +52,7 @@ import {Component} from 'vue-property-decorator'
    display: flex;
    align-items: center;
    justify-content: space-between;
-   > .title {
-     
-   }
+   
    > .leftIcon {
      width: 24px;
      height: 24px;
