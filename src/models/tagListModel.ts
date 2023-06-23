@@ -1,5 +1,4 @@
 import createId from '@/lib/createId'
-import ceatedId from '@/lib/createId'
 
 const localStorageName = 'tagList'
 
