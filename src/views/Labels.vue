@@ -22,13 +22,13 @@ import { Component } from "vue-property-decorator";
 
 
 
-tagListModel.fetch()
+
 
 @Component({
   components: {Button}
 })
 export default class Labels extends Vue {
-   tags = tagListModel.data
+   tags = window.tagList
    createdTag() {
     const name = window.prompt('请输入标签名')
     if(name) {
@@ -48,6 +48,8 @@ export default class Labels extends Vue {
     background: white;
     font-size: 16px;
     padding-left: 16px;
+    max-height: 80%;
+    overflow: scroll;
     > .tag {
       min-height: 44px;
       display: flex;
