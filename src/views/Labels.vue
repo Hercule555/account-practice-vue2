@@ -16,12 +16,8 @@
 
 <script  lang="ts">
 import Button from "@/components/Button.vue";
-import tagListModel from "@/models/tagListModel";
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
-
-
-
 
 
 @Component({

@@ -20,7 +20,7 @@ import Types from "@/components/Money/Types.vue";
 import FormItem from "@/components/Money/FormItem.vue";
 import Tags from "@/components/Money/Tags.vue";
 import  recordListModel  from "@/models/recordListModel";
-import  tagListModel from "@/models/tagListModel"
+
 
 const recordList = recordListModel.fetch();
 
