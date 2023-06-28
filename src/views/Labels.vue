@@ -16,20 +16,23 @@
 
 <script  lang="ts">
 import Button from "@/components/Button.vue";
-import oldStore from "@/store/index2";
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
 
 
 @Component({
-  components: {Button}
+  components: {Button},
+  computed: { //todo
+    // return this.$store.state
+  }
 })
 export default class Labels extends Vue {
-   tags = oldStore.tagList
+   tags = []   //todo  知识点 store.tagList
    createTag() {
     const name = window.prompt('请输入标签名')
     if(name) {
-      oldStore.createTag(name)
+      // oldStore.createTag(name)
+      //todo 知识点 store.createTag
     } 
   }
 }
