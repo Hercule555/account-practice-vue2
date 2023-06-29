@@ -29,12 +29,17 @@ import { Component } from "vue-property-decorator";
 
 @Component({
   components: { FormItem, Button },
+  
 })
 export default class EditLabel extends Vue {
-  tag?: Tag = undefined ;
+  get tag() {
+   return this.$store.state.currentTag
+  }
   created() {
     // 知识点 todo
-    // this.tag = this.$store.findTag(this.$route.params.id);
+    const id = this.$route.params.id
+    this.$store.commit('setCurrent',id)
+    // this.tag = this.$store.commit('findTag',this.$route.params.id);
     if(!this.tag) {
       this.$router.replace("/404");
     } 
