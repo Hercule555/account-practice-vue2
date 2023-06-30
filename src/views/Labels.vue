@@ -24,17 +24,14 @@ import Vue from "vue";
 import { mixins } from "vue-class-component";
 import { Component } from "vue-property-decorator";
 
-@Component({
-  components: { Button },
-  computed: {
-    tags() {
-      return this.$store.state.tagList;
-    },
-  },
-})
+@Component({  components: { Button },})
 export default class Labels extends mixins(TagHelper) {
+  get tags() {
+    return this.$store.state.tagList;
+  }
+
   beforeCreate() {
-    this.$store.commit('fetchTags')
+    this.$store.commit("fetchTags");
   }
 }
 </script>

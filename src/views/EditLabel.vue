@@ -3,11 +3,11 @@
     <div class="navBar">
       <Icon class="leftIcon" name="left" @click="goBack" />
       <span class="title">编辑标签</span>
-      <span class="rightIcon"/>
+      <span class="rightIcon" />
     </div>
     <div class="form-wrapper">
       <FormItem
-        :value="tag.name"
+        :value="currentTag.name"
         @update:value="update"
         fieldName="标签名"
         placeholder="请输入标签名"
@@ -25,37 +25,33 @@ import Button from "@/components/Button.vue";
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
 
-
-
 @Component({
   components: { FormItem, Button },
-  
 })
 export default class EditLabel extends Vue {
-  get tag() {
-   return this.$store.state.currentTag
+  get currentTag() {
+    return this.$store.state.currentTag;
   }
   created() {
-    // 知识点 todo
-    const id = this.$route.params.id
-    this.$store.commit('setCurrent',id)
-    // this.tag = this.$store.commit('findTag',this.$route.params.id);
-    if(!this.tag) {
+    const id = this.$route.params.id;
+    this.$store.commit('fetchTags')
+    this.$store.commit("setCurrent", id);
+    if (!this.currentTag) {
       this.$router.replace("/404");
-    } 
-    
+    }
   }
   update(name: string) {
-    if (this.tag) { 
-      // oldStore.updateTag(this.tag.id, name);
-      // 知识点todo store.updateTag
+    if (this.currentTag) {
+      this.$store.commit('updateTag',{id:this.currentTag.id,name:name})
+      
     }
   }
   remove() {
-    if (this.tag) {
-      return //todo 知识点 store.removeTag  
+    if (this.currentTag) {
+      this.$store.commit('removeTag',this.currentTag.id)
+      //todo 知识点 store.removeTag
       // if(oldStore.removeTag(this.tag.id)) {
-      //   this.$router.back() 
+      //   this.$router.back()
       // }else {
       //   window.alert('删除失败')
       // }
