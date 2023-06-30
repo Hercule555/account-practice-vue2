@@ -49,12 +49,6 @@ export default class EditLabel extends Vue {
   remove() {
     if (this.currentTag) {
       this.$store.commit('removeTag',this.currentTag.id)
-      //todo 知识点 store.removeTag
-      // if(oldStore.removeTag(this.tag.id)) {
-      //   this.$router.back()
-      // }else {
-      //   window.alert('删除失败')
-      // }
     }
   }
   goBack() {
