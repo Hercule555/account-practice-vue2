@@ -134,6 +134,7 @@ export default class Statistics extends Vue {
 }
 .noResult {
   padding: 16px;
+  margin-top: 16px;
   text-align: center;
 }
 </style>
