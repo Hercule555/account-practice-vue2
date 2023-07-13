@@ -51,12 +51,13 @@ export default class Tags extends mixins(TagHelper) {
   flex-grow: 1;
   display: flex;
   flex-direction: column-reverse;
-  font-size: 14px;
+  font-size: 18px;
   padding: 16px;
   background: white;
   > .current {
     display: flex;
     flex-wrap: wrap;
+    margin: 0 auto;
     > li {
       $bg: #d9d9d9;
       $h: 24px;
@@ -76,6 +77,7 @@ export default class Tags extends mixins(TagHelper) {
   }
   > .new {
     padding-top: 16px;
+    margin: 0 auto;
     button {
       background: transparent;
       border: none;
