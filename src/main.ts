@@ -29,7 +29,7 @@ window.onload = function () {
 if (document.documentElement.clientWidth > 500) {
   window.alert('使用手机体验会更加');
   const img = document.createElement('img');
-  img.src = '/qrcode.png';
+  img.src = '/img/qrcode.png';
   img.style.position = 'fixed';
   img.style.left = '50%';
   img.style.top = '50%';
