@@ -51,6 +51,7 @@ export default class Tags extends mixins(TagHelper) {
   flex-grow: 1;
   display: flex;
   flex-direction: column-reverse;
+  justify-content: space-around;
   font-size: 18px;
   padding: 16px;
   background: white;
@@ -61,12 +62,11 @@ export default class Tags extends mixins(TagHelper) {
     > li {
       $bg: #d9d9d9;
       $h: 24px;
-      height: $h;
       border-radius: $h/2;
       padding: 0 16px;
       margin-right: 16px;
       margin-top: 4px;
-      font-size: 14px;
+      font-size: 20px;
       background-color: $bg;
 
       &.selected {
@@ -84,6 +84,7 @@ export default class Tags extends mixins(TagHelper) {
       color: #999;
       border-bottom: 1px solid;
       padding: 0 4px;
+      font-size: 18px;
     }
   }
 }

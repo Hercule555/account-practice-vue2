@@ -1,6 +1,6 @@
 import router from './router/index';
 <template>
-  <div>
+  <div id="app">
     <router-view />
   </div>
 </template>
@@ -20,4 +20,9 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background: #e5e5e5;
 }
+#app {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
 </style>
