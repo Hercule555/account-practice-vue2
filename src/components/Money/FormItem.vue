@@ -1,29 +1,44 @@
 <template>
-    <div>
-      <label class="formItem">
-        <span class="name">{{fieldName}}</span>
-        <input type="text" 
-               :value="value"
-               @input="onValueChange($event.target.value)"
-               :placeholder="placeholder" />
-      </label>
-    </div>
+  <div>
+    <label class="formItem">
+      <span class="name">{{ fieldName }}</span>
+      <template v-if="type === 'date'">
+        <input
+          :type="type || 'text'"
+          :value="x(value)"
+          @input="onValueChange($event.target.value)"
+          :placeholder="placeholder"
+        />
+      </template>
+      <template v-else>
+        <input
+          :type="type || 'text'"
+          :value="value"
+          @input="onValueChange($event.target.value)"
+          :placeholder="placeholder"
+        />
+      </template>
+    </label>
+  </div>
 </template>
 
 <script lang="ts">
-import Vue from "vue"
-import {Component, Emit, Prop, Watch} from "vue-property-decorator";
-
+import dayjs from "dayjs";
+import Vue from "vue";
+import { Component, Emit, Prop, Watch } from "vue-property-decorator";
 
 @Component
 export default class FormItem extends Vue {
-    @Prop({default:''}) readonly value!: string;  
-    @Prop({required:true}) fieldName!: string;
-    @Prop() placeholder?: string
-    onValueChange(value: string) {
-      this.$emit('update:value', value)
-    }
-
+  @Prop({ default: "" }) readonly value!: string;
+  @Prop({ required: true }) fieldName!: string;
+  @Prop() placeholder?: string;
+  @Prop() type?: string;
+  onValueChange(value: string) {
+    this.$emit("update:value", value);
+  }
+  x(toISOString:string) {
+     return dayjs(toISOString).format('YYYY-MM-DD')
+  }
 }
 </script>
 
