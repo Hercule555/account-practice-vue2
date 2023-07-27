@@ -5,24 +5,23 @@
       :data-source="recordTypeList"
       :value.sync="type"
     />
-    
+    <Chart :options="x" />
     <ol v-if="groupedList.length > 0">
-      <li v-for="(group,index) in groupedList" :key="index">
-        <h3 class="title">{{beautify(group.title)}} 
-            <span>{{type}} ￥{{group.total}}</span></h3>
+      <li v-for="(group, index) in groupedList" :key="index">
+        <h3 class="title">
+          {{ beautify(group.title) }}
+          <span>{{ type }} ￥{{ group.total }}</span>
+        </h3>
         <ol>
-          <li v-for="item in group.items" :key="item.id"
-              class="record"         >
-             <span>{{tagString(item.tags)}}</span>
-             <span class="notes">{{item.notes}}</span> 
-             <span>￥{{ item.amount }}</span> 
+          <li v-for="item in group.items" :key="item.id" class="record">
+            <span>{{ tagString(item.tags) }}</span>
+            <span class="notes">{{ item.notes }}</span>
+            <span>￥{{ item.amount }}</span>
           </li>
         </ol>
-      </li>     
+      </li>
     </ol>
-    <div class="noResult" v-else>
-       没有相关记录
-    </div>
+    <div class="noResult" v-else>没有相关记录</div>
   </Layout>
 </template>
 
@@ -33,64 +32,103 @@ import Vue from "vue";
 import { Component } from "vue-property-decorator";
 import Tabs from "@/components/Tabs.vue";
 import recordTypeList from "@/constants/recordTypeList";
-import dayjs from 'dayjs'
+import dayjs from "dayjs";
 import clone from "@/lib/clone";
+import Chart from "@/components/Chart.vue";
 
-const oneDay = 86400 * 1000
+const oneDay = 86400 * 1000;
 
 @Component({
-  components: { Tabs },
+  components: { Tabs, Chart },
 })
 export default class Statistics extends Vue {
   type = "-";
   recordTypeList = recordTypeList;
 
-  beautify(string:string) { 
-    const day = dayjs(string)
-    const now = dayjs()
-    
-    if(day.isSame(now,'day')) {
-      return '今天'
-    } else if(day.isSame(now.subtract(1, 'day'),'day')) {
-       return '昨天'
-    } else if(day.isSame(now.subtract(2, 'day'),'day')) {
-        return '前天'
-    } else if(day.isSame(now,'year')) {
-        return day.format('M月D日')
-    } else {
-      return day.format('YYYY年M月D日')
-    }
-  } 
+  beautify(string: string) {
+    const day = dayjs(string);
+    const now = dayjs();
 
-  tagString(tags:Tag[]) {
-     return tags.length === 0 ? "无" : tags.map(t => t.name).join('， ')
+    if (day.isSame(now, "day")) {
+      return "今天";
+    } else if (day.isSame(now.subtract(1, "day"), "day")) {
+      return "昨天";
+    } else if (day.isSame(now.subtract(2, "day"), "day")) {
+      return "前天";
+    } else if (day.isSame(now, "year")) {
+      return day.format("M月D日");
+    } else {
+      return day.format("YYYY年M月D日");
+    }
   }
+
+  tagString(tags: Tag[]) {
+    return tags.length === 0 ? "无" : tags.map((t) => t.name).join("， ");
+  }
+  get x() {
+    return {
+      xAxis: {
+        type: "category",
+        data: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+      },
+      yAxis: {
+        type: "value",
+      },
+      tooltip: {
+        show: true
+      },
+      series: [
+        {
+          data: [820, 932, 901, 934, 1290, 1330, 1320],
+          type: "line",
+        },
+      ],
+    };
+  }
+
   get recordList() {
     return (this.$store.state as RootState).recordList;
   }
   get groupedList() {
     const { recordList } = this;
-    if(recordList.length === 0){ return [] }
-    
-    const newList = clone(recordList).filter(r => r.type === this.type).sort((a,b) => dayjs(b.createdAt).valueOf() - dayjs(a.createdAt).valueOf())
-    if(newList.length === 0) { return[] }
-    type Result = {title:string, total?:number, items:RecordItem[]}[]
-    const result:Result = [{title:dayjs(newList[0].createdAt).format('YYYY-MM-DD'), items:[newList[0]]}]
-    for(let i = 1; i<newList.length; i++) {
-       const current = newList[i]
-       const last = result[result.length-1]
-       if(dayjs(last.title).isSame(dayjs(current.createdAt),'day')) {
-         last.items.push(current)
-       } else {
-         result.push({title:dayjs(current.createdAt).format('YYYY-MM-DD'), items: [current]})
-       }
+    if (recordList.length === 0) {
+      return [];
     }
-    result.map(group =>
-      group.total = group.items.reduce((sum,item) => sum + item.amount,0)
-    )
 
-    return result  
-  } 
+    const newList = clone(recordList)
+      .filter((r) => r.type === this.type)
+      .sort(
+        (a, b) => dayjs(b.createdAt).valueOf() - dayjs(a.createdAt).valueOf()
+      );
+    if (newList.length === 0) {
+      return [];
+    }
+    type Result = { title: string; total?: number; items: RecordItem[] }[];
+    const result: Result = [
+      {
+        title: dayjs(newList[0].createdAt).format("YYYY-MM-DD"),
+        items: [newList[0]],
+      },
+    ];
+    for (let i = 1; i < newList.length; i++) {
+      const current = newList[i];
+      const last = result[result.length - 1];
+      if (dayjs(last.title).isSame(dayjs(current.createdAt), "day")) {
+        last.items.push(current);
+      } else {
+        result.push({
+          title: dayjs(current.createdAt).format("YYYY-MM-DD"),
+          items: [current],
+        });
+      }
+    }
+    result.map(
+      (group) =>
+        (group.total = group.items.reduce((sum, item) => sum + item.amount, 0))
+    );
+    console.log(result);
+    return result;
+  }
   beforeCreate() {
     this.$store.commit("fetchRecords");
   }
@@ -98,11 +136,15 @@ export default class Statistics extends Vue {
 </script>
 
 <style lang="scss" scoped>
+.echarts {
+  max-width: 100%;
+  height: 400px;
+}
 ::v-deep .type-tabs-item {
   background: #c4c4c4;
   color: #626161;
   &.selected {
-     background: white;
+    background: white;
     color: #333;
     &::after {
       display: none;
@@ -114,23 +156,22 @@ export default class Statistics extends Vue {
 }
 %item {
   padding: 8px 16px;
-   line-height: 27px;
-   display: flex;
-   justify-content: space-between;
-   align-items: center;
+  line-height: 27px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 .title {
-  @extend %item
+  @extend %item;
 }
 .record {
   background: white;
-  @extend %item
+  @extend %item;
 }
 .notes {
   margin-right: auto;
   margin-left: 8px;
   color: #999;
-  
 }
 .noResult {
   padding: 16px;
