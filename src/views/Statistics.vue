@@ -5,7 +5,10 @@
       :data-source="recordTypeList"
       :value.sync="type"
     />
-    <Chart :options="x" />
+    <div class="chart-wrapper" ref="chartWrapper">
+      <Chart class="chart" :options="x" />
+    </div>
+
     <ol v-if="groupedList.length > 0">
       <li v-for="(group, index) in groupedList" :key="index">
         <h3 class="title">
@@ -35,15 +38,21 @@ import recordTypeList from "@/constants/recordTypeList";
 import dayjs from "dayjs";
 import clone from "@/lib/clone";
 import Chart from "@/components/Chart.vue";
+import { mixins } from "vue-class-component";
+import ech  from '@/mixins/EchartHelper'
 
 const oneDay = 86400 * 1000;
 
 @Component({
   components: { Tabs, Chart },
 })
-export default class Statistics extends Vue {
+export default class Statistics extends mixins(ech) {
   type = "-";
   recordTypeList = recordTypeList;
+
+  mounted() {
+    (this.$refs.chartWrapper as HTMLDivElement).scrollLeft = 3000;
+  }
 
   beautify(string: string) {
     const day = dayjs(string);
@@ -66,24 +75,7 @@ export default class Statistics extends Vue {
     return tags.length === 0 ? "无" : tags.map((t) => t.name).join("， ");
   }
   get x() {
-    return {
-      xAxis: {
-        type: "category",
-        data: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-      },
-      yAxis: {
-        type: "value",
-      },
-      tooltip: {
-        show: true
-      },
-      series: [
-        {
-          data: [820, 932, 901, 934, 1290, 1330, 1320],
-          type: "line",
-        },
-      ],
-    };
+    return this.ech
   }
 
   get recordList() {
@@ -177,5 +169,11 @@ export default class Statistics extends Vue {
   padding: 16px;
   margin-top: 16px;
   text-align: center;
+}
+.chart {
+  width: 420%;
+  &-wrapper {
+    overflow: auto;
+  }
 }
 </style>
