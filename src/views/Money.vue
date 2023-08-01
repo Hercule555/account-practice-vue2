@@ -29,6 +29,7 @@ import FormItem from "@/components/Money/FormItem.vue";
 import Tags from "@/components/Money/Tags.vue";
 import Tabs from '@/components/Tabs.vue'
 import recordTypeList from '@/constants/recordTypeList'
+import dayjs from "dayjs";
 
 
 @Component({
@@ -42,12 +43,13 @@ export default class Money extends Vue {
     notes: "",
     type: "-",
     amount: 0,
-    createdAt: new Date().toISOString()
+    createdAt: dayjs(new Date().toISOString()).format('YYYY-MM-DD')
   };
   get recordList() {
       return this.$store.state.recordList;
   }
   created() {
+    console.log(this.record.createdAt)
     this.$store.commit("fetchRecords");
   }
 

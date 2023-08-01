@@ -29,6 +29,7 @@ const store = new Vuex.Store({
       const record2 = clone(record);
       record2.createdAt = record2.createdAt||new Date().toISOString()
       state.recordList.push(record2);
+      console.log(record2.createdAt)
       store.commit('saveRecords')
       window.alert('保存成功')
     },

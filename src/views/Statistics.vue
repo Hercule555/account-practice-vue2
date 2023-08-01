@@ -39,19 +39,20 @@ import dayjs from "dayjs";
 import clone from "@/lib/clone";
 import Chart from "@/components/Chart.vue";
 import { mixins } from "vue-class-component";
-import ech  from '@/mixins/EchartHelper'
+import {EchartHelper} from "@/mixins/EchartHelper";
+import _, { find, map, subtract } from "lodash";
 
 const oneDay = 86400 * 1000;
 
 @Component({
   components: { Tabs, Chart },
 })
-export default class Statistics extends mixins(ech) {
+export default class Statistics extends mixins(EchartHelper) {
   type = "-";
   recordTypeList = recordTypeList;
-
   mounted() {
-    (this.$refs.chartWrapper as HTMLDivElement).scrollLeft = 3000;
+    const div = this.$refs.chartWrapper as HTMLDivElement;
+    div.scrollLeft = div.scrollWidth;
   }
 
   beautify(string: string) {
@@ -74,10 +75,9 @@ export default class Statistics extends mixins(ech) {
   tagString(tags: Tag[]) {
     return tags.length === 0 ? "无" : tags.map((t) => t.name).join("， ");
   }
-  get x() {
-    return this.ech
-  }
-
+  // get x() {
+    
+  // }
   get recordList() {
     return (this.$store.state as RootState).recordList;
   }
@@ -118,7 +118,6 @@ export default class Statistics extends mixins(ech) {
       (group) =>
         (group.total = group.items.reduce((sum, item) => sum + item.amount, 0))
     );
-    console.log(result);
     return result;
   }
   beforeCreate() {

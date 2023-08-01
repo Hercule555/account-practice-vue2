@@ -25,7 +25,7 @@
 <script lang="ts">
 import dayjs from "dayjs";
 import Vue from "vue";
-import { Component, Emit, Prop, Watch } from "vue-property-decorator";
+import { Component,  Prop  } from "vue-property-decorator";
 
 @Component
 export default class FormItem extends Vue {

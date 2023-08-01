@@ -1,45 +1,80 @@
 import Vue from 'vue'
 import Component from 'vue-class-component'
+import { EChartOption } from 'echarts'
+import dayjs from 'dayjs';
+import _ from 'lodash'
 
 @Component
 export class EchartHelper extends Vue {
-  ech = {
-    xAxis: {
-      type: "category",
-      data: [
-        "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun",
-        "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun",
-        "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun",
-        "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun", "on", "jd"
-      ],
-    },
-    yAxis: {
-      type: "value",
-      show: false,
-    },
-    tooltip: {
-      show: true,
-    },
+  get recordList() {
+    return (this.$store.state as RootState).recordList;
+  }
   
-    series: [
-      {
-        data: [
-          820, 932, 901, 934, 1290, 1330, 1320, 820, 932, 901, 934, 1290,
-          1330, 1320, 820, 932, 901, 934, 1290, 1330, 1320, 820, 932, 901,
-          934, 1290, 1330, 1320, 20, 5,
-        ],
-        type: "line",
-        itemStyle: {
-          borderWidth:10,
+  get y() {
+    const today = new Date();
+    const arry = [];
+    for (let i = 0; i <= 29; i++) {
+      const dateString = dayjs(today).subtract(i, "day").format("YYYY-MM-DD");
+      const found = _.find(this.recordList, { createdAt: dateString })
+      arry.push({
+        date: dateString,
+        value: found ? found.amount : 0
+      });
+    }
+    arry.sort((a,b) => {
+      if(a.date > b.date) {
+        return 1
+      } else if(a.date < b.date) {
+        return -1
+      } else {
+        return 0
+      }
+    })
+    return arry
+  }
+
+  get x() {
+    const keys = this.y.map(item => item.date)
+    const values = this.y.map(item => item.value)
+
+    return {
+      xAxis: {
+        type: "category",
+        data: keys,
+        axisTick: {
+          alignWithLabel: true
         }
       },
-    ],
-    grid: {
-      x: 50,
-      y: 25,
-      x2: 30,
-      y2: 45,
-    },
+      yAxis: {
+        type: "value",
+        show: false,
+      },
+      tooltip: {
+        show: true,
+      },
+      legend: {
+        // data: [ 'x']
+
+      },
+      series: [
+        {
+          data: values,
+          type: "line",
+          // name: 'x',
+          symbol: 'circle',
+          itemStyle: {
+
+          },
+          symbolSize: 15,
+        },
+      ],
+      grid: {
+        left: 25,
+        right: 25,
+        bottom: 30,
+        top: 45,
+      },
+    }
   }
 
 }
