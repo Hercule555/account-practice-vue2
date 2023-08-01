@@ -6,7 +6,7 @@
       :value.sync="type"
     />
     <div class="chart-wrapper" ref="chartWrapper">
-      <Chart class="chart" :options="x" />
+      <Chart class="chart" :options="chartOptions" />
     </div>
 
     <ol v-if="groupedList.length > 0">
@@ -40,7 +40,7 @@ import clone from "@/lib/clone";
 import Chart from "@/components/Chart.vue";
 import { mixins } from "vue-class-component";
 import {EchartHelper} from "@/mixins/EchartHelper";
-import _, { find, map, subtract } from "lodash";
+
 
 const oneDay = 86400 * 1000;
 

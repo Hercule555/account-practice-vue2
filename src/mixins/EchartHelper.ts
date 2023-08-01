@@ -10,21 +10,21 @@ export class EchartHelper extends Vue {
     return (this.$store.state as RootState).recordList;
   }
   
-  get y() {
+  get keyValueList() {
     const today = new Date();
     const arry = [];
     for (let i = 0; i <= 29; i++) {
       const dateString = dayjs(today).subtract(i, "day").format("YYYY-MM-DD");
       const found = _.find(this.recordList, { createdAt: dateString })
       arry.push({
-        date: dateString,
+        key: dateString,
         value: found ? found.amount : 0
       });
     }
     arry.sort((a,b) => {
-      if(a.date > b.date) {
+      if(a.key > b.key) {
         return 1
-      } else if(a.date < b.date) {
+      } else if(a.key < b.key) {
         return -1
       } else {
         return 0
@@ -33,9 +33,9 @@ export class EchartHelper extends Vue {
     return arry
   }
 
-  get x() {
-    const keys = this.y.map(item => item.date)
-    const values = this.y.map(item => item.value)
+  get chartOptions() {
+    const keys = this.keyValueList.map(item => item.key)
+    const values = this.keyValueList.map(item => item.value)
 
     return {
       xAxis: {
@@ -43,6 +43,11 @@ export class EchartHelper extends Vue {
         data: keys,
         axisTick: {
           alignWithLabel: true
+        },
+        axisLabel: {
+          formatter: function (value:string) {
+             return value.substring(5)
+          }
         }
       },
       yAxis: {
