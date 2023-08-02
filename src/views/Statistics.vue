@@ -38,21 +38,20 @@ import recordTypeList from "@/constants/recordTypeList";
 import dayjs from "dayjs";
 import clone from "@/lib/clone";
 import Chart from "@/components/Chart.vue";
-import { mixins } from "vue-class-component";
-import {EchartHelper} from "@/mixins/EchartHelper";
-
+import _ from 'lodash'
 
 const oneDay = 86400 * 1000;
 
 @Component({
   components: { Tabs, Chart },
 })
-export default class Statistics extends mixins(EchartHelper) {
+export default class Statistics extends Vue {
   type = "-";
   recordTypeList = recordTypeList;
   mounted() {
     const div = this.$refs.chartWrapper as HTMLDivElement;
     div.scrollLeft = div.scrollWidth;
+    console.log(this.groupedList)
   }
 
   beautify(string: string) {
@@ -75,9 +74,79 @@ export default class Statistics extends mixins(EchartHelper) {
   tagString(tags: Tag[]) {
     return tags.length === 0 ? "无" : tags.map((t) => t.name).join("， ");
   }
-  // get x() {
+  
+  get keyValueList() {
+    const today = new Date();
+    const arry = [];
+    for (let i = 0; i <= 29; i++) {
+      const dateString = dayjs(today).subtract(i, "day").format("YYYY-MM-DD");
+      const found = _.find(this.groupedList, { title: dateString })
+      arry.push({
+        key: dateString,
+        value: found ? found.total : 0
+      });
+    }
+    arry.sort((a,b) => {
+      if(a.key > b.key) {
+        return 1
+      } else if(a.key < b.key) {
+        return -1
+      } else {
+        return 0
+      }
+    })
+    return arry
+  }
+
+  get chartOptions() {
     
-  // }
+    const keys = this.keyValueList.map(item => item.key)
+    const values = this.keyValueList.map(item => item.value)
+    return {
+      xAxis: {
+        type: "category",
+        data: keys,
+        axisTick: {
+          alignWithLabel: true
+        },
+        axisLabel: {
+          formatter: function (value:string) {
+             return value.substring(5)
+          }
+        }
+      },
+      yAxis: {
+        type: "value",
+        show: false,
+      },
+      tooltip: {
+        show: true,
+      },
+      legend: {
+        // data: [ 'x']
+
+      },
+      series: [
+        {
+          data: values,
+          type: "line",
+          // name: 'x',
+          symbol: 'circle',
+          itemStyle: {
+
+          },
+          symbolSize: 15,
+        },
+      ],
+      grid: {
+        left: 25,
+        right: 25,
+        bottom: 30,
+        top: 45,
+      },
+    }
+  }
+
   get recordList() {
     return (this.$store.state as RootState).recordList;
   }
